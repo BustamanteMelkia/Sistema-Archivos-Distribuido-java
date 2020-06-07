@@ -13,12 +13,12 @@ public class Maquina {
     private GestorServicios gestorServicios;
     private Controlador controlador;
     
-    public Maquina(Controlador controlador,String nombre, String ip){
+    public Maquina(Controlador controlador,String nombre, String ip) throws RemoteException{
         this.nombre  = nombre;
         this.ip = ip;
         this.controlador = controlador;
-        this.gestorServicios = new GestorServicios(this.controlador);
-        this.gestorProcesos = new GestorProcesos(nombre,ip);
+        //this.gestorServicios = new GestorServicios(this.controlador,nombre);
+        //this.gestorProcesos = new GestorProcesos(nombre,ip);
     }
 
     public String getIp() {

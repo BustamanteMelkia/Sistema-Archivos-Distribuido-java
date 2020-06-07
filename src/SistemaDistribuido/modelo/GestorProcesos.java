@@ -1,6 +1,7 @@
 
 package SistemaDistribuido.modelo;
 
+import SistemaDistribuido.modelo.procesos.ProcesoMonitoreo;
 import ClienteInterfaces.ComunicacionInterface;
 import SistemaDistribuido.modelo.procesos.*;
 import java.rmi.NotBoundException;

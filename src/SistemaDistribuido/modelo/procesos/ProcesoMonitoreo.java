@@ -1,6 +1,6 @@
 package SistemaDistribuido.modelo.procesos;
-import ClienteInterfaces.ComunicacionInterface;
 
+import ClienteInterfaces.ComunicacionInterface;
 
 public class ProcesoMonitoreo extends Thread{
     private ComunicacionInterface comunicacion;
@@ -25,7 +25,7 @@ public class ProcesoMonitoreo extends Thread{
     
     public void mandarEco(){
         try{
-            System.out.println(comunicacion.mandarEco());
+            comunicacion.mandarEco();
         }catch(Exception e){
             funcionando = false;
             System.out.println("Máquina caida"+e.getMessage());
