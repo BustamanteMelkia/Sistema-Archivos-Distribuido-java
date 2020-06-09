@@ -11,8 +11,8 @@ public class ComunicacionImplement extends UnicastRemoteObject implements Comuni
         super();
         this.prueba = new ArrayList<String>();
     }
-    
-    public String mandarEco() throws RemoteException {
+    @Override
+    public synchronized String mandarEco() throws RemoteException {
         this.prueba.add("melkia");
         //System.out.println("Servicio corriendo");
         return "Sigo vivo "+prueba;

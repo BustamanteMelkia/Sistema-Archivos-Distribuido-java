@@ -1,7 +1,6 @@
 package SistemaDistribuido;
 
 import SistemaDistribuido.modelo.Logica;
-import SistemaDistribuido.modelo.Maquina;
 import SistemaDistribuido.vista.VentanaLogin;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,7 +33,14 @@ public class Controlador implements ActionListener{
         }
     }
     
-    public void prueba(){
+    public void prueba() throws RemoteException{
         System.out.println("holaaaa, dame la maquina a monitorear");
+        System.out.println("id   "+this.logica.getMaquina().getId());
+        System.out.println("puertoCom   "+this.logica.getMaquina().getPuertoComunicacion());
     }
+    
+    public void reportarCaida(String reporteDe,String maquinaCaida){
+        this.logica.getMaquina().reportarFallo(reporteDe,maquinaCaida);
+    }
+
 }

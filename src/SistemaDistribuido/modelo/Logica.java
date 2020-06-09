@@ -1,16 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package SistemaDistribuido.modelo;
 
-import ClienteInterfaces.ComunicacionInterface;
-import ServidorInterface.GestorInterface;
+import ServidorInterface.ServidorInterface;
 import SistemaDistribuido.Controlador;
 import SistemaDistribuido.modelo.Servidor.ServidorImplement;
-import SistemaDistribuido.modelo.procesos.ProcesoMonitoreo;
-import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -31,13 +23,11 @@ public class Logica {
         servidorActivo(ip);
         try{
             Registry registro = LocateRegistry.getRegistry(ip,5556);
-            GestorInterface servidor = (GestorInterface)(registro.lookup("servidor"));
+            ServidorInterface servidor = (ServidorInterface)(registro.lookup("servidor"));
             
-            InfoMaquinaImplement nuevaMaquina = new InfoMaquinaImplement(this.controlador,nombre, ip);
+            this.maquina= new Maquina(this.controlador,servidor,nombre, ip);
             
-            
-            if(servidor.iniciarSesion(nuevaMaquina)){
-                this.maquina = new Maquina(this.controlador,nombre,ip);
+            if(servidor.iniciarSesion(maquina)){
                 registrado =  true;
             }else registrado = false;
             
@@ -48,9 +38,8 @@ public class Logica {
     }
     public void servidorActivo(String ip){
         try{
-            
             Registry registro = LocateRegistry.getRegistry(ip,5556);
-            GestorInterface servidor = (GestorInterface)(registro.lookup("servidor"));
+            ServidorInterface servidor = (ServidorInterface)(registro.lookup("servidor"));
             boolean activo = servidor.servidorActivo();
             System.out.println(activo);
             
@@ -66,7 +55,6 @@ public class Logica {
             } catch (AlreadyBoundException | RemoteException ex1) {
                     Logger.getLogger(Logica.class.getName()).log(Level.SEVERE, null, ex1);
             }
-
         }
     }
     
@@ -75,5 +63,8 @@ public class Logica {
     }
     public String getIp(){
         return maquina.getIp();
+    }
+    public Maquina getMaquina(){
+        return this.maquina;
     }
 }

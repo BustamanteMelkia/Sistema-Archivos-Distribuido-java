@@ -11,8 +11,7 @@ public class Principal {
             VentanaLogin ventanaLogin = new VentanaLogin();
             Controlador controlador = new Controlador(ventanaLogin);
             ventanaLogin.setControlador(controlador);
-            ventanaLogin.setVisible(true);
-            
+            ventanaLogin.setVisible(true);          
         } catch (RemoteException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
