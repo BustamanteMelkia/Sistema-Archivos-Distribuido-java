@@ -23,7 +23,7 @@ public class GestorServicios {
     }
     public void registrarServicioComunicacion(int puerto){
         try{
-            System.out.println("Escuchando en: 192.168.0.104 puerto: "+puerto);
+            System.out.println("Servidor monitoreo listo. \tpuerto: "+puerto);
             
             Registry registro = LocateRegistry.createRegistry(puerto); /*Crear el registro en determinado puerto*/
             registro.bind("comunicacion."+this.nombre, new ComunicacionImplement());/*Guardar el registro: llave-valor*/     

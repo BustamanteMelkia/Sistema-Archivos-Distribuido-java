@@ -5,9 +5,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import ServidorInterface.ServidorInterface;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class ServidorImplement extends UnicastRemoteObject implements ServidorInterface{
     private ArrayList<MaquinaInterface> bitacora;
     private ArrayList<String> maquinasCaidas;
@@ -24,10 +21,11 @@ public class ServidorImplement extends UnicastRemoteObject implements ServidorIn
     
     private void asignarMonitoreo() throws RemoteException{
         MaquinaInterface respaldoEn;
+        MaquinaInterface temp;
         /**realizar el monitoreo siempre que el numero de máquinas registradas sea mayor a uno**/
         if(bitacora.size()>1){
             for (int i = 0 ; i<bitacora.size();i++ ){
-                MaquinaInterface aux = bitacora.get(i);
+                temp = bitacora.get(i);
                 if(i==bitacora.size()-1)
                     /**Ultima máquina de la lista, por lo tanto su respaldo será en la maquina 1**/
                     respaldoEn = bitacora.get(0);
@@ -35,12 +33,12 @@ public class ServidorImplement extends UnicastRemoteObject implements ServidorIn
                     /**No es la última máquina de la lista, por lo tanto su respaldo será en la siguiente maquina**/
                     respaldoEn = bitacora.get(i+1);
                 
-                /*asignar el nombre de la maquina donde estará el respaldo de aux*/
-                aux.setRespaldoEn(respaldoEn.getNombre());
+                /*asignar el nombre de la maquina donde estará el respaldo de temp*/
+                temp.setRespaldoEn(respaldoEn.getNombre());
                 /*Asignar en la maquina de respaldo el nombre de la maquina que estamos respaldando*/
-                respaldoEn.setRespaldoDe(aux.getNombre());
+                respaldoEn.setRespaldoDe(temp.getNombre());
                 /**iniciar monitoreo**/
-                aux.asignarMaquina(respaldoEn.getNombre(), respaldoEn.getIp(), respaldoEn.getPuertoComunicacion());
+                temp.asignarMaquina(respaldoEn.getNombre(), respaldoEn.getIp(), respaldoEn.getPuertoMonitoreo());
             }
         }
     }
@@ -56,11 +54,11 @@ public class ServidorImplement extends UnicastRemoteObject implements ServidorIn
         if(reestablecer)
             maquinasCaidas.remove(nodo.getNombre());
         
-        nodo.setId(++identificador);
-        nodo.setPuertoComunicacion(puertoComunicacion++);
-        nodo.iniciarComunicacion();
+        nodo.setPuertoMonitoreo(puertoComunicacion++);
+        nodo.iniciarPuertoMonitoreo();
         this.bitacora.add(nodo);
         asignarMonitoreo();
+        broadcast(bitacora);
         return true;
     }
 
@@ -83,10 +81,10 @@ public class ServidorImplement extends UnicastRemoteObject implements ServidorIn
             MaquinaInterface maquina = getMaquina(reporteDe);
             
             maquina.setRespaldoEn(nuevaMaquina.getNombre());
-            maquina.asignarMaquina(nuevaMaquina.getNombre(),nuevaMaquina.getIp(), nuevaMaquina.getPuertoComunicacion());
+            maquina.asignarMaquina(nuevaMaquina.getNombre(),nuevaMaquina.getIp(), nuevaMaquina.getPuertoMonitoreo());
             nuevaMaquina.setRespaldoDe(maquina.getNombre());
             
-            System.out.println("\t\tmaquina: "+reporteDe+"     monitorea a:  "+nuevaMaquina.getNombre());
+            //System.out.println("\t\tmaquina: "+reporteDe+"     monitorea a:  "+nuevaMaquina.getNombre());
         }
     }
     
@@ -117,8 +115,32 @@ public class ServidorImplement extends UnicastRemoteObject implements ServidorIn
                     System.out.println("Enconrado");
             } catch (RemoteException ex) {
                 bitacora.remove(i);
-                System.out.println("\tEliminado   "+i);
+                //System.out.println("\tEliminado   "+i);
                 return;
             }
+    }
+    private void broadcast(ArrayList<MaquinaInterface> maquinasActivas) throws RemoteException{
+        for(MaquinaInterface maquina : maquinasActivas){
+            maquina.setMaquinasCaidas(maquinasCaidas);
+            maquina.setPuertoComActual(puertoComunicacion);
+            maquina.broadcast(maquinasActivas);
+        }
+    }
+
+    @Override
+    public void reestablecerServidor(ArrayList<MaquinaInterface> maquinasActivas, String maqCaida,String ipNuevoServer, ArrayList<String> maqCaidas, int puertoComActual)
+        throws RemoteException {
+        maquinasCaidas= maqCaidas;
+        maquinasCaidas.add(maqCaida);
+        System.out.println(maquinasCaidas+"\t"+puertoComActual);
+        this.bitacora = maquinasActivas;
+        eliminarMaquinaCaida(maqCaida);
+        System.out.println("\tservidor reestablecido");
+        for(MaquinaInterface maquina : bitacora){
+            maquina.reasignarServidor(ipNuevoServer);
+            maquina.broadcast(bitacora);
+            System.out.println("Maquina: "+maquina.getNombre()+"    ip "+maquina.getIp());
+        }
+        asignarMonitoreo();
     }
 }

@@ -7,8 +7,6 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Logica {
     private Maquina maquina;
@@ -32,7 +30,7 @@ public class Logica {
             }else registrado = false;
             
         }catch(Exception e){
-            System.out.println("Inicio de sesion  "+e.getMessage());
+            System.out.println(e.getMessage());
         }
         return registrado;
     }
@@ -41,19 +39,18 @@ public class Logica {
             Registry registro = LocateRegistry.getRegistry(ip,5556);
             ServidorInterface servidor = (ServidorInterface)(registro.lookup("servidor"));
             boolean activo = servidor.servidorActivo();
-            System.out.println(activo);
+            //System.out.println(activo);
             
         }catch(Exception ex){
             
-            System.out.println("Servidor no disponible");
-            System.out.println("Escuchando en: 192.168.0.104 puerto: "+5556);
+            System.out.println("Servidor listo. \nEscuchando en: "+ip+"   puerto: "+5556);
                 
             try {
                 Registry registro = LocateRegistry.createRegistry(5556); /*Crear el registro en determinado puerto*/
                 registro.bind("servidor", new ServidorImplement());/*Guardar el registro: llave-valor*/
                 
             } catch (AlreadyBoundException | RemoteException ex1) {
-                    Logger.getLogger(Logica.class.getName()).log(Level.SEVERE, null, ex1);
+                    System.out.println("Error   servidorActivo "+ex1.getMessage());
             }
         }
     }

@@ -1,5 +1,4 @@
 package SistemaDistribuido;
-
 import SistemaDistribuido.vista.VentanaLogin;
 import java.rmi.RemoteException;
 import java.util.logging.Level;

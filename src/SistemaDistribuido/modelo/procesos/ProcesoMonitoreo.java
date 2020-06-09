@@ -29,11 +29,10 @@ public class ProcesoMonitoreo extends Thread{
                 Thread.sleep(500);
             } catch (InterruptedException ex) {
                 System.out.println(ex.getMessage());
-            }
-            
+            }       
             mandarEco();
         }
-        System.out.println("hilo muerto");
+        //System.out.println("hilo muerto");
     }
     
     public void mandarEco() {
@@ -41,7 +40,7 @@ public class ProcesoMonitoreo extends Thread{
             comunicacion.mandarEco();
         }catch(RemoteException e){
             funcionando = false;
-            System.out.println("\t\tMáquina caida en_"+controlador.getNombre());
+            System.out.println("Máquina caida en: "+controlador.getNombre());
             this.controlador.reportarCaida(controlador.getNombre(),maquinaMonitoreada);
             
         }
