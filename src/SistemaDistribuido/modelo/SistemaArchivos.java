@@ -23,6 +23,16 @@ public class SistemaArchivos {
         this.path = path;
         this.propietario = propietario;
     }
+    private void mostrar(String path,String padre){
+        File dir = new File(path);
+        for(String file : dir.list()){
+            ///vista.pintarArbol(String [] archivos,padre);
+            File temp = new File(path+"\\"+file);
+            
+            if(temp.isDirectory())
+                mostrar(path+"\\"+file,file);
+        }
+    }
     
     public void listarDirectorio(String path, int nivel,String pathDestino) throws IOException{
         File dir = new File(path);
@@ -37,8 +47,8 @@ public class SistemaArchivos {
                 crearDirectorio(pathDestino+"\\"+file);
                 listarDirectorio(path+"\\"+file,nivel+1,pathDestino+"\\"+file);
             }
-            else
-                copiarArchivo(path,file,pathDestino);  
+            //else
+                //copiarArchivo(path,file,pathDestino);  
         }
     }
     

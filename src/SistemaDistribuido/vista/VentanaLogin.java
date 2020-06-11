@@ -5,6 +5,7 @@ import SistemaDistribuido.vista.PanelLogin;
 import java.awt.Dimension;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class VentanaLogin extends JFrame {
 
@@ -40,5 +41,8 @@ public class VentanaLogin extends JFrame {
     }
     public void setControlador(Controlador c){
         this.panelLogin.setControlador(c);
+    }
+    public void mensajeError(String mensaje){
+        JOptionPane.showMessageDialog(null, mensaje);
     }
 }

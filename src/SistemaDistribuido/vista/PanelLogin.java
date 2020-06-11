@@ -8,11 +8,9 @@ import java.awt.GridBagLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -29,9 +27,6 @@ public class PanelLogin extends JPanel{
     
     //Buttons
     private JButton loginButton;
-    private ButtonGroup UDPoTCP;
-    private JRadioButton UDPButton;
-    private JRadioButton TCPButton;
 
     public PanelLogin(){
         super();

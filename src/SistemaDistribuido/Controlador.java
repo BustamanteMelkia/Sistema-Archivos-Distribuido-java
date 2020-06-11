@@ -2,12 +2,16 @@ package SistemaDistribuido;
 
 import SistemaDistribuido.modelo.Logica;
 import SistemaDistribuido.vista.VentanaLogin;
+import SistemaDistribuido.vista.VentanaPrincipal;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 
-public class Controlador implements ActionListener{
+public class Controlador implements ActionListener, TreeSelectionListener{
     private Logica logica;
+    private VentanaPrincipal ventanaPrincipal;
     private VentanaLogin ventanaLogin;
     
     Controlador(VentanaLogin ventanaLogin) throws RemoteException{
@@ -28,8 +32,15 @@ public class Controlador implements ActionListener{
         if(e.getSource() == ventanaLogin.getButtonLogin()){
             String nombre=ventanaLogin.getLoginPanel().getNombre();
             String ip=ventanaLogin.getLoginPanel().getIp();
-            if(!logica.iniciarSesion(nombre,ip));
+            if(!logica.iniciarSesion(nombre,ip)){
+                ventanaLogin.mensajeError("Error, el usuario ya existe");
                 ventanaLogin.getLoginPanel().limpiarCampos();
+            }else{
+                ventanaLogin.setVisible(false);
+                ventanaPrincipal = new VentanaPrincipal();
+                ventanaPrincipal.setVisible(true);
+            }
+                
         }
     }
     
@@ -37,4 +48,8 @@ public class Controlador implements ActionListener{
         this.logica.getMaquina().reportarFallo(reporteDe,maquinaCaida);
     }
 
+    @Override
+    public void valueChanged(TreeSelectionEvent e) {
+        
+    }
 }
